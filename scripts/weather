@@ -1,0 +1,15 @@
+#!/bin/bash
+# this script is for awesome 2.3
+
+#LOCATION=KNYC
+LOCATION=$1
+#LOCATION=KDCA
+# station list at: http://www.rap.ucar.edu/weather/surface/stations.txt
+
+NEW=$(wget -qO- "http://www.weather.gov/data/current_obs/${LOCATION}.xml"\
+        | sed -nr '/<(weather|temp_f)>/s/.*>(.*)<.*/\1/p' 2>/dev/null)
+if [ "x$NEW" != x ]; then
+    NEW=$(echo " $NEW |" | awk 'BEGIN{RS="";FS="\n"}{printf "%s %s",$1,$2}')
+    echo -e "$NEW"
+    echo "" # an empty line flushes data inside awesome
+fi
